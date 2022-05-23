@@ -2,11 +2,13 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { alpha, AppBar, Box, IconButton, InputBase, Menu, MenuItem, styled, Toolbar, Typography } from '@mui/material';
+import { alpha, AppBar, Box, Button, IconButton, InputBase, Menu, MenuItem, styled, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import SignInPage from './components/organisms/sing-in';
 
 function App() {
+  const [stateLogIn, setStateLogIn] = React.useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -68,59 +70,61 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{width: "100%", background: 'blue', fontSize: "16px", fontFamily: "monospace", color: "white" }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-              <Toolbar variant="dense">
-              
-         
-            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleClick}>
-            <MenuIcon />
-          </IconButton>
-       
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
+      {!stateLogIn ? (<SignInPage setStateLogIn={setStateLogIn}/> ) :
+      
+      (<><div style={{ width: "100%", background: 'blue', fontSize: "16px", fontFamily: "monospace", color: "white" }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static">
+            <Toolbar variant="dense">
+
+
+              <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleClick}>
+                <MenuIcon />
+              </IconButton>
+
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Logout</MenuItem>
+              </Menu>
+
+              <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
+                Всё что угодно
+              </Typography>
+
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }} />
+              </Search>
+              <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => {setStateLogIn(false)}}>
+                <MenuIcon />
+              </IconButton>
+
+            </Toolbar>
+          </AppBar>
+        </Box>
+
+      </div><div style={{ height: 600, padding: "5px" }}>
+          <DataGrid
+            checkboxSelection
+            components={{
+              LoadingOverlay: LinearProgress,
             }}
-          >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
-          </Menu>
-        
-                <Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                  Всё что угодно
-                </Typography>
-               
-                <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-          
-              </Toolbar>
-            </AppBar>
-          </Box>
-          
-      </div>
-      <div style={{ height: 600, padding: "5px" }}>
-      <DataGrid
-      checkboxSelection
-        components={{
-          LoadingOverlay: LinearProgress,
-        }}
-        loading
-        {...data}
-      />
-    </div>
+            loading
+            {...data} />
+        </div></>)}
     
     </div>
   );
